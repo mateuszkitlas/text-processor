@@ -1,0 +1,187 @@
+<html>
+
+<head>
+  <title>Text processor</title>
+  <style>
+    * {
+      border: 0;
+      outline: 0;
+      margin: 0;
+      padding: 0;
+      gap: 10px;
+    }
+
+    body {
+      display: flex;
+      height: 100vh;
+      box-sizing: content-box;
+      background-color: #000;
+
+
+      &>div,
+      &>textarea {
+        flex: 1;
+        padding: 10px;
+        color: #eee;
+        background-color: #222;
+      }
+
+      &>div {
+        &>div {
+          display: flex;
+          margin-bottom: 10px;
+
+          &>* {
+            flex: 1
+          }
+        }
+
+        &>pre {
+          white-space: break-spaces;
+          overflow-wrap: anywhere;
+          word-break: break-all;
+          width: 50vw;
+        }
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <textarea></textarea>
+  <div>
+    <div>
+      <select>
+        <option value="uaToPl">Cyrylica -> Łoźmiński</option>
+        <option value="plToUa">Łoźmiński -> Cyrylica</option>
+      </select>
+      <button>copy</button>
+    </div>
+    <pre></pre>
+  </div>
+  <script>
+    const $t = document.querySelector("textarea");
+    const $pre = document.querySelector("pre");
+    const $select = document.querySelector("select");
+    const scoped = (f) => f();
+    const cm = {
+      ...(() => {
+        // ---------- Helpers ----------
+        const isUpper = s => s === s.toUpperCase() && s !== s.toLowerCase();
+        const capitalize = s => s ? s[0].toUpperCase() + s.slice(1) : s;
+
+        const matchCase = (src, out) =>
+          src.length === 0 ? out :
+            src.length === 1 ? (isUpper(src) ? capitalize(out) : out) :
+              isUpper(src[0]) ? capitalize(out) : out;
+
+        // ---------- Mapping tables ----------
+        const uaSingleToPl = new Map([
+          ["А", "A"], ["а", "a"],
+          ["Б", "B"], ["б", "b"],
+          ["В", "W"], ["в", "w"],
+          ["Г", "H"], ["г", "h"],
+          ["Ґ", "G"], ["ґ", "g"],
+          ["Д", "D"], ["д", "d"],
+          ["Е", "E"], ["е", "e"],
+          ["Ж", "Ż"], ["ж", "ż"],
+          ["З", "Z"], ["з", "z"],
+          ["И", "Y"], ["и", "y"],
+          ["І", "I"], ["і", "i"],
+          ["Й", "J"], ["й", "j"],
+          ["К", "K"], ["к", "k"],
+          ["М", "M"], ["м", "m"],
+          ["Н", "N"], ["н", "n"],
+          ["О", "O"], ["о", "o"],
+          ["П", "P"], ["п", "p"],
+          ["Р", "R"], ["р", "r"],
+          ["С", "S"], ["с", "s"],
+          ["Т", "T"], ["т", "t"],
+          ["У", "U"], ["у", "u"],
+          ["Ф", "F"], ["ф", "f"],
+          ["Х", "Ch"], ["х", "ch"],
+          ["Ц", "C"], ["ц", "c"],
+          ["Ч", "Cz"], ["ч", "cz"],
+          ["Ш", "Sz"], ["ш", "sz"]
+        ]);
+
+        const plSingleToUa = new Map([
+          ["A", "А"], ["a", "а"],
+          ["B", "Б"], ["b", "б"],
+          ["W", "В"], ["w", "в"],
+          ["H", "Г"], ["h", "г"],
+          ["G", "Ґ"], ["g", "ґ"],
+          ["D", "Д"], ["d", "д"],
+          ["E", "Е"], ["e", "е"],
+          ["Z", "З"], ["z", "з"],
+          ["Y", "И"], ["y", "и"],
+          ["I", "І"], ["i", "і"],
+          ["K", "К"], ["k", "к"],
+          ["L", "Л"], ["l", "л"],
+          ["Ł", "Л"], ["ł", "л"],
+          ["M", "М"], ["m", "м"],
+          ["N", "Н"], ["n", "н"],
+          ["O", "О"], ["o", "о"],
+          ["P", "П"], ["p", "п"],
+          ["R", "Р"], ["r", "р"],
+          ["S", "С"], ["s", "с"],
+          ["T", "Т"], ["t", "т"],
+          ["U", "У"], ["u", "у"],
+          ["F", "Ф"], ["f", "ф"],
+          ["C", "Ц"], ["c", "ц"],
+          ["J", "Й"], ["j", "й"],
+        ]);
+
+        // ---------- Ukrainian → Polish ----------
+        const uaToPl = str =>
+          str
+            .replace(/Щ/g, "Szcz").replace(/щ/g, "szcz")
+            .replace(/ДЗЬ/g, "DŹ").replace(/дзь/g, "dź")
+            .replace(/ЦЬ/g, "Ć").replace(/ць/g, "ć")
+            .replace(/ЗЬ/g, "Ź").replace(/зь/g, "ź")
+            .replace(/СЬ/g, "Ś").replace(/сь/g, "ś")
+            .replace(/НЬ/g, "Ń").replace(/нь/g, "ń")
+            .replace(/ЛЬ/g, "L").replace(/ль/g, "l")
+            .replace(/ТЬ/g, "T'").replace(/ть/g, "t´")
+            .replace(/ДЬ/g, "D'").replace(/дь/g, "d´")
+            .replace(/’/g, "")
+            .split("")
+            .map(ch => uaSingleToPl.get(ch) || ch)
+            .join("");
+
+        // ---------- Polish → Ukrainian ----------
+        const plToUa = str =>
+          str
+            .replace(/Szcz/g, "Щ").replace(/szcz/g, "щ")
+            .replace(/Cz/g, "Ч").replace(/cz/g, "ч")
+            .replace(/Sz/g, "Ш").replace(/sz/g, "ш")
+            .replace(/Ch/g, "Х").replace(/ch/g, "х")
+            .replace(/Ż/g, "Ж").replace(/ż/g, "ж")
+            .replace(/Ź/g, "Зь").replace(/ź/g, "зь")
+            .replace(/Ś/g, "Сь").replace(/ś/g, "сь")
+            .replace(/Ć/g, "Ць").replace(/ć/g, "ць")
+            .replace(/Ń/g, "Нь").replace(/ń/g, "нь")
+            .replace(/DŹ/g, "ДЗЬ").replace(/dź/g, "дзь")
+            .replace(/T'/g, "Ть").replace(/t'/g, "ть")
+            .replace(/D'/g, "Дь").replace(/d'/g, "дь")
+            .replace(/J[aA]/g, "Я").replace(/j[aA]/g, "я")
+            .replace(/J[eE]/g, "Є").replace(/j[eE]/g, "є")
+            .replace(/J[iI]/g, "Ї").replace(/j[iI]/g, "ї")
+            .replace(/J[uU]/g, "Ю").replace(/j[uU]/g, "ю")
+            .split("")
+            .map(ch => plSingleToUa.get(ch) || ch)
+            .join("");
+
+        return { uaToPl, plToUa };
+      })()
+    }
+    const convert = () => cm[$select.value]($t.value)
+    const write = () => { $pre.innerText = convert() }
+    $t.addEventListener("input", write);
+    $select.addEventListener("change", write);
+    write();
+    document.querySelector("button").addEventListener("click", () => navigator.clipboard.writeText(convert()));
+  </script>
+</body>
+
+</html>
