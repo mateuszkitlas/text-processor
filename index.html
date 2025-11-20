@@ -9,6 +9,7 @@
       margin: 0;
       padding: 0;
       gap: 10px;
+      font-size: 1rem;
     }
 
     body {
@@ -17,13 +18,16 @@
       box-sizing: content-box;
       background-color: #000;
 
-
       &>div,
       &>textarea {
         flex: 1;
         padding: 10px;
         color: #eee;
         background-color: #222;
+      }
+
+      @media(max-aspect-ratio: 4/3) {
+        flex-direction: column;
       }
 
       &>div {
@@ -40,7 +44,6 @@
           white-space: break-spaces;
           overflow-wrap: anywhere;
           word-break: break-all;
-          width: 50vw;
         }
       }
     }
