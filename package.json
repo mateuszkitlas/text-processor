@@ -1,0 +1,20 @@
+{
+  "name": "text-processor",
+  "version": "1.0.0",
+  "description": "",
+  "homepage": "https://github.com/mateuszkitlas/text-processor",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mateuszkitlas/text-processor.git"
+  },
+  "license": "ISC",
+  "author": "Mateusz Kitlas",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "typescript": "^5.9.3"
+  }
+}

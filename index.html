@@ -70,15 +70,6 @@
     const scoped = (f) => f();
     const cm = {
       ...(() => {
-        // ---------- Helpers ----------
-        const isUpper = s => s === s.toUpperCase() && s !== s.toLowerCase();
-        const capitalize = s => s ? s[0].toUpperCase() + s.slice(1) : s;
-
-        const matchCase = (src, out) =>
-          src.length === 0 ? out :
-            src.length === 1 ? (isUpper(src) ? capitalize(out) : out) :
-              isUpper(src[0]) ? capitalize(out) : out;
-
         // ---------- Mapping tables ----------
         const uaSingleToPl = new Map([
           ["А", "A"], ["а", "a"],
@@ -93,20 +84,6 @@
           ["И", "Y"], ["и", "y"],
           ["І", "I"], ["і", "i"],
           ["Й", "J"], ["й", "j"],
-          ["К", "K"], ["к", "k"],
-          ["М", "M"], ["м", "m"],
-          ["Н", "N"], ["н", "n"],
-          ["О", "O"], ["о", "o"],
-          ["П", "P"], ["п", "p"],
-          ["Р", "R"], ["р", "r"],
-          ["С", "S"], ["с", "s"],
-          ["Т", "T"], ["т", "t"],
-          ["У", "U"], ["у", "u"],
-          ["Ф", "F"], ["ф", "f"],
-          ["Х", "Ch"], ["х", "ch"],
-          ["Ц", "C"], ["ц", "c"],
-          ["Ч", "Cz"], ["ч", "cz"],
-          ["Ш", "Sz"], ["ш", "sz"]
         ]);
 
         const plSingleToUa = new Map([
@@ -135,19 +112,61 @@
           ["C", "Ц"], ["c", "ц"],
           ["J", "Й"], ["j", "й"],
         ]);
-
         // ---------- Ukrainian → Polish ----------
         const uaToPl = str =>
           str
-            .replace(/Щ/g, "Szcz").replace(/щ/g, "szcz")
-            .replace(/ДЗЬ/g, "DŹ").replace(/дзь/g, "dź")
-            .replace(/ЦЬ/g, "Ć").replace(/ць/g, "ć")
-            .replace(/ЗЬ/g, "Ź").replace(/зь/g, "ź")
-            .replace(/СЬ/g, "Ś").replace(/сь/g, "ś")
-            .replace(/НЬ/g, "Ń").replace(/нь/g, "ń")
-            .replace(/ЛЬ/g, "L").replace(/ль/g, "l")
-            .replace(/ТЬ/g, "T'").replace(/ть/g, "t´")
-            .replace(/ДЬ/g, "D'").replace(/дь/g, "d´")
+            .replace(/Дзь/g, "Dź").replace(/ДЗЬ/g, "DŹ").replace(/дзь/gi, "dź")
+
+            .replace(/Ш[абвгґдезиікллмнопрстуфцйь]/g, "Sz").replace(/Ш/g, "SZ").replace(/ш/g, "sz")
+            .replace(/Ч[абвгґдезиікллмнопрстуфцйь]/g, "Cz").replace(/Ч/g, "CZ").replace(/ч/g, "cz")
+            .replace(/Щ[абвгґдезиікллмнопрстуфцйь]/g, "Szcz").replace(/Щ/g, "SZCZ").replace(/щ/g, "szcz")
+            .replace(/Х[абвгґдезиікллмнопрстуфцйь]/g, "Ch").replace(/Х/g, "CH").replace(/х/gi, "ch")
+            .replace(/Ю[абвгґдезиікллмнопрстуфцйь]/g, "Ju").replace(/Ю/g, "Ju").replace(/ю/gi, "ju")
+
+            .replace(/Ц[Ьь]/g, "Ć").replace(/ць/gi, "ć")
+            .replace(/З[Ьь]/g, "Ź").replace(/зь/gi, "ź")
+            .replace(/С[Ьь]/g, "Ś").replace(/сь/gi, "ś")
+            .replace(/Н[Ьь]/g, "Ń").replace(/нь/gi, "ń")
+            .replace(/Л[Ьь]/g, "L").replace(/ль/gi, "l")
+            .replace(/Т[Ьь]/g, "T'").replace(/ть/gi, "t'")
+            .replace(/Д[Ьь]/g, "D'").replace(/дь/gi, "d'")
+
+            .replace(/Ф/g, "F").replace(/ф/gi, "f")
+            .replace(/У/g, "U").replace(/у/gi, "u")
+            .replace(/Т/g, "T").replace(/т/gi, "t")
+            .replace(/С/g, "S").replace(/с/gi, "s")
+            .replace(/Р/g, "R").replace(/р/gi, "r")
+            .replace(/П/g, "P").replace(/п/gi, "p")
+            .replace(/О/g, "O").replace(/о/gi, "o")
+            .replace(/Н/g, "N").replace(/н/gi, "n")
+            .replace(/М/g, "M").replace(/м/gi, "m")
+            .replace(/К/g, "K").replace(/к/gi, "k")
+            .replace(//g, "").replace(//gi, "")
+            .replace(//g, "").replace(//gi, "")
+            .replace(//g, "").replace(//gi, "")
+            .replace(//g, "").replace(//gi, "")
+            .replace(//g, "").replace(//gi, "")
+            .replace(//g, "").replace(//gi, "")
+            .replace(//g, "").replace(//gi, "")
+            .replace(//g, "").replace(//gi, "")
+            .replace(//g, "").replace(//gi, "")
+            .replace(//g, "").replace(//gi, "")
+            .replace(//g, "").replace(//gi, "")
+            .replace(//g, "").replace(//gi, "")
+            .replace(//g, "").replace(//gi, "")
+            .replace(//g, "").replace(//gi, "")
+            .replace(//g, "").replace(//gi, "")
+            .replace(//g, "").replace(//gi, "")
+            .replace(//g, "").replace(//gi, "")
+            .replace(//g, "").replace(//gi, "")
+            .replace(//g, "").replace(//gi, "")
+            .replace(//g, "").replace(//gi, "")
+            .replace(//g, "").replace(//gi, "")
+            .replace(//g, "").replace(//gi, "")
+            .replace(//g, "").replace(//gi, "")
+            .replace(//g, "").replace(//gi, "")
+
+
             .replace(/’/g, "")
             .split("")
             .map(ch => uaSingleToPl.get(ch) || ch)
@@ -156,22 +175,22 @@
         // ---------- Polish → Ukrainian ----------
         const plToUa = str =>
           str
-            .replace(/Szcz/g, "Щ").replace(/szcz/g, "щ")
-            .replace(/Cz/g, "Ч").replace(/cz/g, "ч")
-            .replace(/Sz/g, "Ш").replace(/sz/g, "ш")
-            .replace(/Ch/g, "Х").replace(/ch/g, "х")
-            .replace(/Ż/g, "Ж").replace(/ż/g, "ж")
-            .replace(/Ź/g, "Зь").replace(/ź/g, "зь")
-            .replace(/Ś/g, "Сь").replace(/ś/g, "сь")
-            .replace(/Ć/g, "Ць").replace(/ć/g, "ць")
-            .replace(/Ń/g, "Нь").replace(/ń/g, "нь")
-            .replace(/DŹ/g, "ДЗЬ").replace(/dź/g, "дзь")
-            .replace(/T'/g, "Ть").replace(/t'/g, "ть")
-            .replace(/D'/g, "Дь").replace(/d'/g, "дь")
-            .replace(/J[aA]/g, "Я").replace(/j[aA]/g, "я")
-            .replace(/J[eE]/g, "Є").replace(/j[eE]/g, "є")
-            .replace(/J[iI]/g, "Ї").replace(/j[iI]/g, "ї")
-            .replace(/J[uU]/g, "Ю").replace(/j[uU]/g, "ю")
+            .replace(/Szcz/g, "Щ").replace(/szcz/gi, "щ")
+            .replace(/Cz/g, "Ч").replace(/cz/gi, "ч")
+            .replace(/Sz/g, "Ш").replace(/sz/gi, "ш")
+            .replace(/Ch/g, "Х").replace(/ch/gi, "х")
+            .replace(/Ż/g, "Ж").replace(/ż/gi, "ж")
+            .replace(/Ź[abwhgdezyiklłmnoprstufcj]/g, "Зь").replace(/Ź/g, "ЗЬ").replace(/ź/gi, "зь")
+            .replace(/Ś[abwhgdezyiklłmnoprstufcj]/g, "Сь").replace(/Ś/g, "СЬ").replace(/ś/gi, "сь")
+            .replace(/Ć[abwhgdezyiklłmnoprstufcj]/g, "Ць").replace(/Ć/g, "ЦЬ").replace(/ć/gi, "ць")
+            .replace(/Ń[abwhgdezyiklłmnoprstufcj]/g, "Нь").replace(/Ń/g, "НЬ").replace(/ń/gi, "нь")
+            .replace(/DŹ/g, "ДЗЬ").replace(/Dź/g, "Дзь").replace(/dź/gi, "дзь")
+            .replace(/T['’][abwhgdezyiklłmnoprstufcj]/g, "Ть").replace(/T['’]/g, "ТЬ").replace(/t['’]/gi, "ть")
+            .replace(/D['’][abwhgdezyiklłmnoprstufcj]/g, "Дь").replace(/t['’]/g, "ДЬ").replace(/d['’]/gi, "дь")
+            .replace(/J[aA]/g, "Я").replace(/ja/gi, "я")
+            .replace(/J[eE]/g, "Є").replace(/je/gi, "є")
+            .replace(/J[iI]/g, "Ї").replace(/ji/gi, "ї")
+            .replace(/J[uU]/g, "Ю").replace(/ju/gi, "ю")
             .split("")
             .map(ch => plSingleToUa.get(ch) || ch)
             .join("");
