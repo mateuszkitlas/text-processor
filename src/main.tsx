@@ -178,28 +178,26 @@ function App() {
       >
         <div className="editor-pane">
           <div className="pane-heading">
-            <label className="direction-control">
-              <select
-                value={label}
-                onChange={(event) => {
-                  setLabel(event.target.value as Label);
-                  setCopied(false);
-                }}
-              >
-                {labels.map((label) => (
-                  <option key={label} value={label}>
-                    {label}
-                  </option>
-                ))}
-              </select>
-            </label>
+            <select
+              value={label}
+              onChange={(event) => {
+                setLabel(event.target.value as Label);
+                setCopied(false);
+              }}
+            >
+              {labels.map((label) => (
+                <option key={label} value={label}>
+                  {label}
+                </option>
+              ))}
+            </select>
             <button
               className="button"
               type="button"
               aria-pressed={keepAwake}
               onClick={toggleFullscreen}
             >
-              {isFullscreen ? "Exit fullscreen" : "Fullscreen"}
+              {isFullscreen ? "Exit" : "Fullscreen"}
             </button>
             <button
               className="button"
@@ -210,18 +208,16 @@ function App() {
               {theme === "light" ? "Dark" : "Light"}
             </button>
             <button className="button" type="button" onClick={pasteInput}>
-              Paste input
+              Paste
             </button>
-            <div className="pane-heading">
-              <button
-                className="button"
-                type="button"
-                disabled={!output}
-                onClick={copyOutput}
-              >
-                {copied ? "Copied" : "Copy output"}
-              </button>
-            </div>
+            <button
+              className="button"
+              type="button"
+              disabled={!output}
+              onClick={copyOutput}
+            >
+              {copied ? "Copied" : "Copy"}
+            </button>
           </div>
           <textarea
             id="source-text"

@@ -1,5 +1,5 @@
 :root {
-  font-family: "Manrope", sans-serif;
+  font-family: sans-serif;
   color: var(--text);
   background: var(--page-bg);
   --page-bg: #f4f5f1;
@@ -62,27 +62,14 @@ textarea {
   color-scheme: dark;
 }
 
-
-.direction-control {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  color: var(--muted);
-  font-size: 12px;
-  font-weight: 600;
-}
-
-.direction-control select {
-  max-width: min(390px, 65vw);
+select {
   color: var(--control-text);
-  font-size: 13px;
-  padding: 7px 11px;
+  padding: 7px;
   border: 1px solid var(--control-border);
   border-radius: 4px;
   background: var(--control-bg);
   cursor: pointer;
-  font-size: 12px;
-  font-weight: 700;
+  flex: 1;
 }
 
 .editors {
@@ -122,21 +109,11 @@ textarea {
   display: flex;
   flex-wrap: wrap;
   min-height: 40px;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 12px;
+  gap: 6px;
   padding: 6px 8px;
-  border-bottom: 1px solid var(--border);
   color: var(--muted);
   font-size: 12px;
   font-weight: 700;
-}
-
-.pane-heading > span:last-child {
-  color: var(--secondary-text);
-  font-family: "DM Mono", monospace;
-  font-size: 11px;
-  font-weight: 400;
 }
 
 textarea,
@@ -187,27 +164,12 @@ button:focus-visible {
   opacity: 0.45;
 }
 
-footer {
-  padding: 16px 0 22px;
-  color: var(--secondary-text);
-  font-size: 11px;
-}
-
 @media (max-width: 700px) {
   .workspace {
     padding: 0px;
   }
-
-  .direction-control {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 4px;
-  }
-
-  .direction-control select {
-    max-width: 54vw;
-    min-height: 34px;
-    font-size: 11px;
+  select {
+    min-height: 30px;
   }
 
   .editors {
