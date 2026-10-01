@@ -30,7 +30,16 @@ function App() {
   const [text, setText] = useState("");
   const [copied, setCopied] = useState(false);
   const [paneSplit, setPaneSplit] = useState(50);
+  const [theme, setTheme] = useState<"light" | "dark">(() =>
+    localStorage.getItem("theme") === "dark" ? "dark" : "light",
+  );
   const output = transcription(text, kindByLabel[label]);
+
+  function toggleTheme() {
+    const nextTheme = theme === "light" ? "dark" : "light";
+    localStorage.setItem("theme", nextTheme);
+    setTheme(nextTheme);
+  }
 
   function resizePanes(event: React.PointerEvent<HTMLDivElement>) {
     const editors = event.currentTarget.parentElement;
@@ -58,7 +67,7 @@ function App() {
     setCopied(true);
   }
 
-  async function pasteText() {
+  async function pasteInput() {
     updateText(await navigator.clipboard.readText());
   }
 
@@ -68,7 +77,7 @@ function App() {
   }
 
   return (
-    <main className="workspace">
+    <main className="workspace" data-theme={theme}>
       <section
         className="editors"
         aria-label="Transcription editor"
@@ -93,13 +102,31 @@ function App() {
             ))}
           </select>
         </label>
+        <button
+              className="button"
+              type="button"
+              aria-pressed={theme === "dark"}
+              onClick={toggleTheme}
+            >
+              {theme === "light" ? "Dark Mode" : "Light Mode"}
+            </button>
              <button
               className="button"
               type="button"
-              onClick={pasteText}
+              onClick={pasteInput}
             >
-              Paste
+              Paste input
             </button>
+                      <div className="pane-heading">
+            <button
+              className="button"
+              type="button"
+              disabled={!output}
+              onClick={copyOutput}
+            >
+              {copied ? "Copied" : "Copy output"}
+            </button>
+          </div>
           </div>
           <textarea
             id="source-text"
@@ -122,16 +149,6 @@ function App() {
         />
 
         <div className="editor-pane output-pane">
-          <div className="pane-heading">
-            <button
-              className="button"
-              type="button"
-              disabled={!output}
-              onClick={copyOutput}
-            >
-              {copied ? "Copied" : "Copy"}
-            </button>
-          </div>
           <pre aria-live="polite" dir="auto">{output || "Your transcription will appear here..."}</pre>
         </div>
       </section>
