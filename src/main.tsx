@@ -1,29 +1,52 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { transcription, type Kind } from "@keatlass/transcribe-pl-be-uk";
 import "./style.css";
 
-type SRecord<T>  = Record<string, T>
-const keys = <T extends Record<any, any>>(t: T) => Object.keys(t) as  (keyof { [K in keyof T as K extends string ? K : K extends number ? `${K}` : never]: 0 })[]
-
-
+type SRecord<T> = Record<string, T>;
+const keys = <T extends Record<any, any>>(t: T) =>
+  Object.keys(t) as (keyof {
+    [
+      K in keyof T as K extends string ? K : K extends number ? `${K}` : never
+    ]: 0;
+  })[];
 
 const kindByLabel = {
-    "Łacinka -> Cyrylica": { alphabet: "cyrillic" },
-  "Ukraiński -> Łacinka (wg Łozińskiego)":
-     { alphabet: "latin", language: "ukrainian", kind: "Łoziński" },
-"Ukraiński -> Łacinka (wg Jirečka)": { alphabet: "latin", language: "ukrainian", kind: "Jireček" },
-"Ukraiński -> Łacinka (oficjalna)": { alphabet: "latin", language: "ukrainian", kind: "official" },  
-  "Białoruski -> Łacinka (archaiczna)": { alphabet: "latin", language: "belarusian", "kind": "archaic" },
-  "Białoruski -> Łacinka (klasyczna)": { alphabet: "latin", language: "belarusian", "kind":"classic" },
-  "Białoruski -> Łacinka (oficjalna)": { alphabet: "latin", language: "belarusian", "kind": "official" },
-  
-  
- } satisfies SRecord<Kind>
+  "Łacinka -> Cyrylica": { alphabet: "cyrillic" },
+  "Ukraiński -> Łacinka (wg Łozińskiego)": {
+    alphabet: "latin",
+    language: "ukrainian",
+    kind: "Łoziński",
+  },
+  "Ukraiński -> Łacinka (wg Jirečka)": {
+    alphabet: "latin",
+    language: "ukrainian",
+    kind: "Jireček",
+  },
+  "Ukraiński -> Łacinka (oficjalna)": {
+    alphabet: "latin",
+    language: "ukrainian",
+    kind: "official",
+  },
+  "Białoruski -> Łacinka (archaiczna)": {
+    alphabet: "latin",
+    language: "belarusian",
+    kind: "archaic",
+  },
+  "Białoruski -> Łacinka (klasyczna)": {
+    alphabet: "latin",
+    language: "belarusian",
+    kind: "classic",
+  },
+  "Białoruski -> Łacinka (oficjalna)": {
+    alphabet: "latin",
+    language: "belarusian",
+    kind: "official",
+  },
+} satisfies SRecord<Kind>;
 
-
-const labels = keys(kindByLabel)
-type Label = keyof typeof kindByLabel
+const labels = keys(kindByLabel);
+type Label = keyof typeof kindByLabel;
 
 function App() {
   const [label, setLabel] = useState<Label>(labels[0]);
@@ -34,6 +57,9 @@ function App() {
     localStorage.getItem("theme") === "dark" ? "dark" : "light",
   );
   const output = transcription(text, kindByLabel[label]);
+  useEffect(() => {
+    window.document.title = label;
+  }, [label]);
 
   function toggleTheme() {
     const nextTheme = theme === "light" ? "dark" : "light";
@@ -48,7 +74,9 @@ function App() {
     const updateSplit = (moveEvent: PointerEvent) => {
       const bounds = editors.getBoundingClientRect();
       const isHorizontal = window.matchMedia("(max-width: 700px)").matches;
-      const position = isHorizontal ? moveEvent.clientY - bounds.top : moveEvent.clientX - bounds.left;
+      const position = isHorizontal
+        ? moveEvent.clientY - bounds.top
+        : moveEvent.clientX - bounds.left;
       const size = isHorizontal ? bounds.height : bounds.width;
       const split = (position / size) * 100;
       setPaneSplit(Math.min(80, Math.max(20, split)));
@@ -81,28 +109,31 @@ function App() {
       <section
         className="editors"
         aria-label="Transcription editor"
-        style={{
-          "--pane-first": `${paneSplit}fr`,
-          "--pane-second": `${100 - paneSplit}fr`,
-        } as React.CSSProperties}
+        style={
+          {
+            "--pane-first": `${paneSplit}fr`,
+            "--pane-second": `${100 - paneSplit}fr`,
+          } as React.CSSProperties
+        }
       >
         <div className="editor-pane">
-
           <div className="pane-heading">
-                                <label className="direction-control">
-          <select
-            value={label}
-            onChange={(event) => {
-              setLabel(event.target.value as Label);
-              setCopied(false);
-            }}
-          >
-            {labels.map((label) => (
-              <option key={label} value={label}>{label}</option>
-            ))}
-          </select>
-        </label>
-        <button
+            <label className="direction-control">
+              <select
+                value={label}
+                onChange={(event) => {
+                  setLabel(event.target.value as Label);
+                  setCopied(false);
+                }}
+              >
+                {labels.map((label) => (
+                  <option key={label} value={label}>
+                    {label}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <button
               className="button"
               type="button"
               aria-pressed={theme === "dark"}
@@ -110,23 +141,19 @@ function App() {
             >
               {theme === "light" ? "Dark Mode" : "Light Mode"}
             </button>
-             <button
-              className="button"
-              type="button"
-              onClick={pasteInput}
-            >
+            <button className="button" type="button" onClick={pasteInput}>
               Paste input
             </button>
-                      <div className="pane-heading">
-            <button
-              className="button"
-              type="button"
-              disabled={!output}
-              onClick={copyOutput}
-            >
-              {copied ? "Copied" : "Copy output"}
-            </button>
-          </div>
+            <div className="pane-heading">
+              <button
+                className="button"
+                type="button"
+                disabled={!output}
+                onClick={copyOutput}
+              >
+                {copied ? "Copied" : "Copy output"}
+              </button>
+            </div>
           </div>
           <textarea
             id="source-text"
@@ -149,7 +176,9 @@ function App() {
         />
 
         <div className="editor-pane output-pane">
-          <pre aria-live="polite" dir="auto">{output || "Your transcription will appear here..."}</pre>
+          <pre aria-live="polite" dir="auto">
+            {output || "Your transcription will appear here..."}
+          </pre>
         </div>
       </section>
     </main>
