@@ -29,7 +29,29 @@ function App() {
   const [label, setLabel] = useState<Label>(labels[0]);
   const [text, setText] = useState("");
   const [copied, setCopied] = useState(false);
+  const [paneSplit, setPaneSplit] = useState(50);
   const output = transcription(text, kindByLabel[label]);
+
+  function resizePanes(event: React.PointerEvent<HTMLDivElement>) {
+    const editors = event.currentTarget.parentElement;
+    if (!editors) return;
+
+    const updateSplit = (moveEvent: PointerEvent) => {
+      const bounds = editors.getBoundingClientRect();
+      const isHorizontal = window.matchMedia("(max-width: 700px)").matches;
+      const position = isHorizontal ? moveEvent.clientY - bounds.top : moveEvent.clientX - bounds.left;
+      const size = isHorizontal ? bounds.height : bounds.width;
+      const split = (position / size) * 100;
+      setPaneSplit(Math.min(80, Math.max(20, split)));
+    };
+    const stopResizing = () => {
+      window.removeEventListener("pointermove", updateSplit);
+      window.removeEventListener("pointerup", stopResizing);
+    };
+
+    window.addEventListener("pointermove", updateSplit);
+    window.addEventListener("pointerup", stopResizing, { once: true });
+  }
 
   async function copyOutput() {
     await navigator.clipboard.writeText(output);
@@ -47,7 +69,14 @@ function App() {
 
   return (
     <main className="workspace">
-      <section className="editors" aria-label="Transcription editor">
+      <section
+        className="editors"
+        aria-label="Transcription editor"
+        style={{
+          "--pane-first": `${paneSplit}fr`,
+          "--pane-second": `${100 - paneSplit}fr`,
+        } as React.CSSProperties}
+      >
         <div className="editor-pane">
 
           <div className="pane-heading">
@@ -81,6 +110,16 @@ function App() {
             spellCheck={false}
           />
         </div>
+        <div
+          className="pane-divider"
+          role="separator"
+          aria-label="Resize editor panes"
+          aria-orientation="vertical"
+          aria-valuemin={20}
+          aria-valuemax={80}
+          aria-valuenow={Math.round(paneSplit)}
+          onPointerDown={resizePanes}
+        />
 
         <div className="editor-pane output-pane">
           <div className="pane-heading">
