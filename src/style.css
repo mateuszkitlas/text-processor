@@ -20,7 +20,6 @@ body {
   min-width: 320px;
   min-height: 100vh;
   margin: 0;
-  background-image: linear-gradient(135deg, #f4f5f1 0%, #edf2ed 55%, #e5eee8 100%);
 }
 
 button,
@@ -33,37 +32,9 @@ textarea {
   display: flex;
   min-height: 100vh;
   flex-direction: column;
-  padding: 0 5vw;
+  padding: 0;
 }
 
-.topbar {
-  display: flex;
-  min-height: 88px;
-  align-items: center;
-  justify-content: space-between;
-  gap: 24px;
-  border-bottom: 1px solid #d8e0d8;
-}
-
-.wordmark {
-  display: flex;
-  align-items: center;
-  gap: 11px;
-  font-size: 15px;
-  font-weight: 700;
-}
-
-.wordmark-icon {
-  display: grid;
-  width: 34px;
-  aspect-ratio: 1;
-  place-items: center;
-  border-radius: 7px;
-  background: #245642;
-  color: #f6f4e9;
-  font-family: "DM Mono", monospace;
-  font-size: 13px;
-}
 
 .direction-control {
   display: flex;
@@ -76,20 +47,22 @@ textarea {
 
 .direction-control select {
   max-width: min(390px, 65vw);
-  min-height: 40px;
-  padding: 0 34px 0 12px;
-  border: 1px solid #cbd6cc;
-  border-radius: 5px;
-  background: #fbfcf9;
   color: #20352b;
   font-size: 13px;
+  padding: 7px 11px;
+  border: 1px solid #b9c9bd;
+  border-radius: 4px;
+  background: #f9fbf7;
+  color: #245642;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 700;
 }
 
 .editors {
   display: grid;
   flex: 1;
   grid-template-columns: minmax(0, var(--pane-first)) 12px minmax(0, var(--pane-second));
-  padding: 38px 0 28px;
 }
 
 .pane-divider {
@@ -143,7 +116,6 @@ textarea,
   width: 100%;
   flex: 1;
   margin: 0;
-  padding: 20px 0;
   border: 0;
   background: transparent;
   color: #182923;
@@ -168,7 +140,7 @@ textarea:focus-visible,
 select:focus-visible,
 button:focus-visible {
   outline: 2px solid #438b69;
-  outline-offset: 3px;
+  outline-offset: -2px;
 }
 
 .button {
@@ -195,11 +167,7 @@ footer {
 
 @media (max-width: 700px) {
   .workspace {
-    padding: 0 22px;
-  }
-
-  .topbar {
-    min-height: 72px;
+    padding: 0px;
   }
 
   .direction-control {
@@ -218,7 +186,6 @@ footer {
     grid-template-columns: 1fr;
     grid-template-rows: minmax(0, var(--pane-first)) 12px minmax(0, var(--pane-second));
     gap: 0;
-    padding-top: 22px;
   }
 
   .pane-divider {
