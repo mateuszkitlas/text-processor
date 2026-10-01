@@ -120,10 +120,12 @@ textarea {
 
 .pane-heading {
   display: flex;
+  flex-wrap: wrap;
   min-height: 40px;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: 12px;
+  padding: 6px 8px;
   border-bottom: 1px solid var(--border);
   color: var(--muted);
   font-size: 12px;

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { transcription, type Kind } from "@keatlass/transcribe-pl-be-uk";
 import "./style.css";
@@ -52,7 +52,11 @@ function App() {
   const [label, setLabel] = useState<Label>(labels[0]);
   const [text, setText] = useState("");
   const [copied, setCopied] = useState(false);
+  const [keepAwake, setKeepAwake] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
   const [paneSplit, setPaneSplit] = useState(50);
+  const workspaceRef = useRef<HTMLElement>(null);
+  const wakeLockRef = useRef<WakeLockSentinel | null>(null);
   const [theme, setTheme] = useState<"light" | "dark">(() =>
     localStorage.getItem("theme") === "dark" ? "dark" : "light",
   );
@@ -60,6 +64,39 @@ function App() {
   useEffect(() => {
     window.document.title = label;
   }, [label]);
+
+  useEffect(() => {
+    const updateFullscreen = () => {
+      const fullscreen = document.fullscreenElement === workspaceRef.current;
+      setIsFullscreen(fullscreen);
+      if (!fullscreen) setKeepAwake(false);
+    };
+    document.addEventListener("fullscreenchange", updateFullscreen);
+    return () =>
+      document.removeEventListener("fullscreenchange", updateFullscreen);
+  }, []);
+
+  useEffect(() => {
+    if (!keepAwake) return;
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState !== "visible" || !("wakeLock" in navigator))
+        return;
+      void navigator.wakeLock
+        .request("screen")
+        .then((lock) => {
+          wakeLockRef.current = lock;
+        })
+        .catch(() => undefined);
+    };
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      const lock = wakeLockRef.current;
+      wakeLockRef.current = null;
+      void lock?.release().catch(() => {});
+    };
+  }, [keepAwake]);
 
   function toggleTheme() {
     const nextTheme = theme === "light" ? "dark" : "light";
@@ -99,13 +136,36 @@ function App() {
     updateText(await navigator.clipboard.readText());
   }
 
+  async function toggleFullscreen() {
+    if (keepAwake) {
+      setKeepAwake(false);
+      if (document.fullscreenElement === workspaceRef.current) {
+        await document.exitFullscreen().catch(() => {});
+      }
+      return;
+    }
+
+    setKeepAwake(true);
+    const fullscreenRequest = workspaceRef.current
+      ?.requestFullscreen()
+      .catch(() => undefined);
+    if ("wakeLock" in navigator) {
+      try {
+        wakeLockRef.current = await navigator.wakeLock.request("screen");
+      } catch {
+        return;
+      }
+    }
+    await fullscreenRequest;
+  }
+
   function updateText(value: string) {
     setText(value);
     setCopied(false);
   }
 
   return (
-    <main className="workspace" data-theme={theme}>
+    <main ref={workspaceRef} className="workspace" data-theme={theme}>
       <section
         className="editors"
         aria-label="Transcription editor"
@@ -136,10 +196,18 @@ function App() {
             <button
               className="button"
               type="button"
+              aria-pressed={keepAwake}
+              onClick={toggleFullscreen}
+            >
+              {isFullscreen ? "Exit fullscreen" : "Fullscreen"}
+            </button>
+            <button
+              className="button"
+              type="button"
               aria-pressed={theme === "dark"}
               onClick={toggleTheme}
             >
-              {theme === "light" ? "Dark Mode" : "Light Mode"}
+              {theme === "light" ? "Dark" : "Light"}
             </button>
             <button className="button" type="button" onClick={pasteInput}>
               Paste input
