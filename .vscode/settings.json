@@ -3,5 +3,12 @@
   "[typescriptreact]": {
     "editor.defaultFormatter": "dbaeumer.vscode-eslint",
     "editor.formatOnSave": true
+  },
+  "[css]": {
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+    "editor.formatOnSave": true
+  },
+  "chat.tools.terminal.autoApprove": {
+    "npm run lint": true
   }
 }

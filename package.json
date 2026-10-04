@@ -13,10 +13,13 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "lint": "eslint . --ext .js,.mjs,.cjs,.ts,.tsx",
+    "lint": "eslint . --ext .js,.mjs,.cjs,.ts,.tsx,.css",
     "preview": "vite preview"
   },
   "dependencies": {
+    "@iconify-json/codicon": "^1.2.73",
+    "@iconify-json/lucide": "^1.2.139",
+    "@iconify/react": "^6.0.2",
     "@keatlass/transcribe-pl-be-uk": "^1.0.1",
     "react": "^19.3.0",
     "react-dom": "^19.3.0"
@@ -24,6 +27,7 @@
   "devDependencies": {
     "@babel/core": "^7.29.7",
     "@babel/eslint-parser": "^7.29.9",
+    "@eslint/css": "^2.0.0",
     "@eslint/js": "^9.39.5",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",

@@ -1,0 +1,38 @@
+@media (max-width: 700px) {
+  .workspace {
+    padding: 0px;
+  }
+
+  select {
+    min-height: 30px;
+  }
+
+  .editors {
+    grid-template-columns: 1fr;
+    grid-template-rows: minmax(0, var(--pane-first)) 12px minmax(
+        0,
+        var(--pane-second)
+      );
+    gap: 0;
+  }
+
+  .pane-divider {
+    cursor: row-resize;
+    &::after {
+      top: 5px;
+      right: 0;
+      bottom: auto;
+      left: 0;
+      width: auto;
+      height: 2px;
+    }
+  }
+
+  .editor-pane {
+    min-height: 230px;
+  }
+
+  textarea {
+    min-height: 180px;
+  }
+}
