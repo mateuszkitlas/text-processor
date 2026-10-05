@@ -209,7 +209,7 @@ function App() {
                 </option>
               ))}
             </select>
-            <NodeBtn label="Toggle menu" icon="lucide:hamburger">
+            <NodeBtn label="Toggle menu" icon="lucide:menu">
               {(close) =>
                 close && (
                   <>
@@ -239,7 +239,7 @@ function App() {
                           }
                         }
                         await fullscreenRequest;
-                        close();
+                        //close();
                       }}
                       text={fullscreen ? "Exit" : "Fullscreen"}
                       icon={
@@ -254,7 +254,7 @@ function App() {
                         const nextTheme = theme === "light" ? "dark" : "light";
                         localStorage.setItem("theme", nextTheme);
                         setTheme(nextTheme);
-                        close();
+                        //close();
                       }}
                       icon={theme === "dark" ? "lucide:sun" : "lucide:moon"}
                       text={theme === "dark" ? "Light mode" : "Dark mode"}
@@ -262,7 +262,7 @@ function App() {
                     <LeafBtn
                       onClick={async () => {
                         updateText(await navigator.clipboard.readText());
-                        close();
+                        //close();
                       }}
                       text="Paste"
                       icon="lucide:clipboard-paste"
@@ -271,7 +271,7 @@ function App() {
                       onClick={async () => {
                         await navigator.clipboard.writeText(output);
                         setCopied(true);
-                        close();
+                        //close();
                       }}
                       disabled={!output}
                       pressed={copied}
